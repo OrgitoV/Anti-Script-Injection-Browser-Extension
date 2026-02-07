@@ -1,0 +1,1 @@
+A browser extension that helps prevent Injection attacks
