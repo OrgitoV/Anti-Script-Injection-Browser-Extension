@@ -2,5 +2,15 @@
     "name": "Anti-Script Injection",
     "version": "1.0",
     "manifest_version": 3,
-    "decscription": "A Chrome extension to prevent script injection attacks."
+    "description": "A Chrome extension to prevent script injection attacks.",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["scripts/content.js"],
+            "run_at": "document_start"
+        }
+    ]
 }
