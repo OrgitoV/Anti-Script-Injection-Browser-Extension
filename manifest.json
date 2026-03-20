@@ -1,6 +1,0 @@
-{
-    "name": "Anti-Script Injection",
-    "version": "1.0",
-    "manifest_version": 3,
-    "description": "A Chrome extension to prevent script injection attacks."
-}
