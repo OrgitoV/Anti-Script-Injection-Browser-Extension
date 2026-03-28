@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASI Test</title>
+</head>
+<body>
+  <h1>ASI Hook Testing Page</h1>
+  <button id="run">Run tests</button>
+  <pre id="output"></pre>
+
+  <script>
+    const out = document.querySelector('#output');
+    const log = (text) => { out.textContent += text + '\n'; };
+    document.getElementById('run').addEventListener('click', () => {
+      log('1. eval');
+      eval("console.log('done eval')");
+
+      log('2. Function');
+      new Function("console.log('done Function')")();
+
+      log('3. setTimeout string');
+      setTimeout("console.log('done setTimeout string')", 10);
+
+      log('4. createElement script');
+      const s = document.createElement('script');
+      s.textContent = "console.log('injected script')";
+      document.body.appendChild(s);
+
+      log('5. fetch');
+      fetch('https://httpbin.org/get').then(() => log('fetch done')).catch((e) => log('fetch fail ' + e));
+
+      log('6. XHR');
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://httpbin.org/get');
+      xhr.onload = () => log('xhr done');
+      xhr.onerror = () => log('xhr fail');
+      xhr.send();
+
+      log('done');
+    });
+  </script>
+</body>
+</html>

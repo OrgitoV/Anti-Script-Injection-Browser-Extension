@@ -1,6 +1,23 @@
 {
-    "name": "Anti-Script Injection",
-    "version": "1.0",
-    "manifest_version": 3,
-    "description": "A Chrome extension to prevent script injection attacks."
+  "name": "Anti-Script Injection",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "A Chrome extension to prevent script injection attacks.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["scripting"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>", "file:///*"],
+      "js": ["scripts/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["scripts/page-monitor.js"],
+      "matches": ["<all_urls>", "file:///*"]
+    }
+  ]
 }
