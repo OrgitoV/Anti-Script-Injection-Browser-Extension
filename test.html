@@ -1,18 +1,23 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ASI Test</title>
 </head>
+
 <body>
   <h1>ASI Hook Testing Page</h1>
   <button id="run">Run tests</button>
   <pre id="output"></pre>
 
   <script>
+    // Small helper to show test progress in the page.
     const out = document.querySelector('#output');
     const log = (text) => { out.textContent += text + '\n'; };
+
+    // Runs one sample for each monitored API/hook.
     document.getElementById('run').addEventListener('click', () => {
       log('1. eval');
       eval("console.log('done eval')");
@@ -42,4 +47,5 @@
     });
   </script>
 </body>
+
 </html>

@@ -28,13 +28,16 @@
 
     // Receive events from injected page-context monitor and forward to background.
     window.addEventListener('message', (evt) => {
+        // Only accept messages sent by this page and our monitor tag.
         if (evt.source !== window) return;
         const data = evt.data;
         if (!data || data.__asi !== true) return;
         send({ type: data.type, data: data.data });
     });
 
-    // Inject a page-context script file (CSP-safe, unlike inline script text).
+    // Load the monitor in page context (inline code may be blocked by CSP).
+    // We do this because page eval/Function calls are not directly visible
+    // inside the content script context.
     const injected = document.createElement('script');
     injected.src = chrome.runtime.getURL('scripts/page-monitor.js');
     injected.onload = () => injected.remove();
