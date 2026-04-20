@@ -35,6 +35,29 @@
         send({ type: data.type, data: data.data });
     });
 
+    //Listen for block/warn commands
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if(message.command === 'blockExecution'){
+            //Relay block instruction to page context monitor
+            window.postMessage({
+                __asi: true,
+                type: 'block-api',
+                targetType: message.type,
+                reason: message.reason
+            }, '*');
+
+            console.warn('[ASI] Blocking execution:', message.type, message.reason);
+        } else if(message.command === 'warnUser'){
+            //Display warning notification
+            window.postMessage({
+                __asi: true,
+                type: 'show-warning',
+                score: message.score,
+                message: message.message
+            }, '*');
+        }
+    })
+
     // Load the monitor in page context (inline code may be blocked by CSP).
     // We do this because page eval/Function calls are not directly visible
     // inside the content script context.
