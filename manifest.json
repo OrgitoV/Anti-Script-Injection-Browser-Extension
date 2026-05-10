@@ -6,7 +6,16 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["scripting"],
+  "icons": {
+        "128": "icons/icon128.png"
+      },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+        "128": "icons/icon128.png"
+        }
+    },
+    "permissions": ["scripting", "storage", "tabs"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {

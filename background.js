@@ -75,6 +75,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       timestamp: new Date().toISOString()
     });
 
+    if (threatScore > 0) {
+      const storeKey = `asi_tab_${tabId}`;
+      chrome.storage.local.get([storeKey], (res) => {
+        const existing = res[storeKey] || { score: 0, events: [] };
+        const storedEvent = {
+          type: message.payload.type,
+          ts: message.payload.ts,
+          src: message.payload.src,
+          score: threatScore,
+          action: action.type,
+          pattern,
+          reason: action.reason || ''
+        };
+
+        chrome.storage.local.set({
+          [storeKey]: {
+            score: threatScore,
+            events: [...existing.events, storedEvent].slice(-60)
+          }
+        });
+      });
+    }
+
     // Take action based on score
     if(action.shouldBlock) blockExecution(sender.tab.id, message.payload, action.reason);
     else if(action.shouldWarn) warnUser(sender.tab.id, threatScore);
@@ -169,13 +192,4 @@ function blockExecution(tabId, payload, reason){
     payload: payload
   }).catch(err => {console.error('[ASI] Failed to send block message:', err)});
 
-}
-
-function warnUser(tabId, score){
-  // Send warning to content.js & notify user
-  chrome.tabs.sendMessage(tabId, {
-    command: 'warnUser',
-    score: score,
-    message: `Suspicious activity detected (Score: ${score}/100)`
-  }).catch(err => {console.error('[ASI] Failed to send warning:', err)});
 }

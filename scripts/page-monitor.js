@@ -218,52 +218,7 @@
     });
 
     function showWarningBanner(score, message){
-        const banner = document.createElement('div');
-        banner.id = 'asi-warning-banner';
-        banner.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
-            color: white;
-            padding: 15px 20px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 999999;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        `;
-
-        const dismissBtn = document.createElement('button');
-        dismissBtn.textContent = 'Dismiss';
-        dismissBtn.style.cssText = `
-            background: white; 
-            border: none; 
-            padding: 8px 12px; 
-            border-radius: 3px; 
-            cursor: pointer; 
-            font-weight: bold;
-            flex-shrink: 0;
-        `;
-        dismissBtn.onclick = () => banner.remove();
-
-        const message_span = document.createElement('span');
-        message_span.textContent = `⚠️ ${message} - Threat Score: ${score}/100`;
-
-        banner.appendChild(message_span);
-        banner.appendChild(dismissBtn);
-        document.documentElement.appendChild(banner);
-
-        //Auto-dismiss after 10 seconds
-        setTimeout(() => {
-            if(document.getElementById('asi-warning-banner')){
-                banner.remove();
-            }
-        }, 10000);
+        return;
     }
 
     emit('page-monitor-loaded', 'ok');
